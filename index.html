@@ -8,6 +8,23 @@
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+    <div id="page-loader" class="ui active dimmer">
+        <div class="ui text loader">游戏节操加载中，请耐性等待...</div>
+    </div>
+    <div class="intro">
+        <p>
+            <h1 style="text-align: center;">汉诺塔</h1>
+            汉诺塔问题是源于印度的一个古老传说：<br/>
+            大梵天创造世界的时候做了三根金刚石柱子，在一根柱子上从下往上按照大小顺序摞着64片黄金圆盘。
+            大梵天命令婆罗门把圆盘从下面开始按大小顺序重新摆放在另一根柱子上。
+        </p>
+        <p>
+            并且规定，在小圆盘上不能放大圆盘，在三根柱子之间一次只能移动一个圆盘。
+        </p>
+        <p style="text-align: center;">
+            <button id="start-game" class="ui button orange">开始游戏</button>
+        </p>
+    </div>
     <div class="btns-box">
         <button  id="restart-btn" class="ui icon orange button tiny">
             <i class="icon repeat"></i>
@@ -49,7 +66,7 @@
 
         <div class="content" style="box-sizing: border-box">
             <p style="text-align: center;">
-                <img  style="max-width: 100%;" src="/img/huaxing.gif">
+                <img  style="max-width: 100%;" src="img/huaxing.gif">
             </p>
             <p style="text-align: center">
                 <b><span id="uName-res"></span></b>
@@ -81,24 +98,21 @@
     var gameConfig = {};
 
     function startGame(){
+        $('.btns-box').show(200);
+        $('.intro').hide(200);
         hanNuoTaView = React.render(
                 <TowerBox dTotal={gameConfig.num} uName={gameConfig.name} />,
                 document.getElementById('box')
         );
     }
     function endGame(){
+        $('.btns-box').hide(200);
         if(hanNuoTaView){
             React.unmountComponentAtNode(document.getElementById('box'));
         }
         hanNuoTaView = null;
     }
-
-    $('#restart-btn').click(function(){
-        endGame();
-        startGame();
-    });
-
-    $('#setting-btn').click(function(){
+    function settingGame(){
         endGame();
         $('#setting-modal').modal({
             closable: false,
@@ -110,9 +124,23 @@
                 startGame();
             }
         }).modal('show');
+    }
+
+    $('#restart-btn').click(function(){
+        endGame();
+        startGame();
     });
 
-    $('#setting-btn').click();
+    $('#setting-btn').click(function(){
+        settingGame();
+    });
 
+    $('#start-game').click(function(){
+        settingGame();
+    });
+
+    $(document).ready(function(){
+        $('#page-loader').removeClass('active');
+    });
 </script>
 </html>

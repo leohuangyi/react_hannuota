@@ -73,6 +73,8 @@ var Tower = new React.createClass({
     },
     //为'塔顶的盘'赋可拖动能力，'塔'赋可放能力
     bindDragDrop: function(){
+        //先将所有盘子的可拖动能力剥除
+        $(this.getDOMNode()).find( ".disk.ui-draggable" ).draggable( "disable" );
         var _this = this;
         //赋予可拖能力
         if(this.refs.top){
@@ -82,7 +84,7 @@ var Tower = new React.createClass({
                 start: function(){
                     _this.props.setDragTower(_this.props.towerId);
                 }
-            });
+            }).draggable('enable');
         }
 
         //赋予可放能力
