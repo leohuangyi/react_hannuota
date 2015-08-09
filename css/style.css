@@ -1,0 +1,76 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+.btns-box {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 999;
+}
+.clearfix {
+  overflow: auto;
+  _height: 1%;
+}
+.box {
+  border-bottom: 5px solid #22be34;
+  box-sizing: border-box;
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+.box .time-box {
+  left: 10px;
+  position: absolute;
+  top: 10px;
+  z-index: 1000;
+}
+.box .tower-box {
+  box-sizing: border-box;
+  height: 100%;
+  float: left;
+  position: relative;
+  width: 33.333%;
+}
+.box .tower-box .tower-bg {
+  width: 80px;
+  bottom: 0;
+  height: 70%;
+  position: absolute;
+  right: 50%;
+}
+.box .tower-box .tower-bg .tower-pillar {
+  margin: 0 auto;
+  height: 100%;
+  width: 0;
+  border-right: 4px solid #22be34;
+  border-left: 4px solid #22be34;
+}
+.box .tower-box .tower-bg .tower-pillar.dragOver {
+  border-color: #ff5144;
+}
+.box .tower-box .disk-box {
+  height: 100%;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+.box .tower-box .disk-box .disk {
+  border: 1px solid #22be34;
+  background-color: #44e056;
+  color: #000;
+  display: table;
+  font-size: 0.6rem;
+  position: absolute;
+  text-align: center;
+  z-index: 500;
+}
+.box .tower-box .disk-box .disk.ui-draggable-dragging {
+  background-color: #ff5144;
+}
+.box .tower-box .disk-box .disk .disk-num {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
