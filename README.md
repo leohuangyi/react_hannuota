@@ -1,5 +1,3 @@
-# 这是一个通过React实现的[汉诺塔游戏](http://www.xwlj.net/demo/react/react_hannuota)
-
 # 深入React学习之疯狂的汉诺塔
 
 React是一款设计巧妙的界面库，这周继续对它进行了深入的学习，并写了一款小游戏[疯狂的汉诺塔](http://www.xwlj.net/demo/react/react_hannuota)，有时间各位可以试试，挑战一下自己的朋友吧。
