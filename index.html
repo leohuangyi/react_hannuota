@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>React汉诺塔 by leohuangyi</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>React汉诺塔</h1>
+        <h2></h2>
+
+        <section id="downloads">
+          <a href="https://github.com/leohuangyi/react_hannuota/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/leohuangyi/react_hannuota/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/leohuangyi/react_hannuota" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="深入react学习之疯狂的汉诺塔" class="anchor" href="#%E6%B7%B1%E5%85%A5react%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%96%AF%E7%8B%82%E7%9A%84%E6%B1%89%E8%AF%BA%E5%A1%94" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>深入React学习之疯狂的汉诺塔</h1>
+
+<p>React是一款设计巧妙的界面库，这周继续对它进行了深入的学习，并写了一款小游戏<a href="http://leohuangyi.github.io/react_hannuota">疯狂的汉诺塔</a>，有时间各位可以试试，挑战一下自己的朋友吧。</p>
+
+<p>接下来，我们先学习两个使用React的优化点，然后再解析这个小游戏的实现。</p>
+
+<h2>
+<a id="组件的生命周期优化" class="anchor" href="#%E7%BB%84%E4%BB%B6%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BC%98%E5%8C%96" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>组件的生命周期优化</h2>
+
+<p>React主要通过生命周期函数来控制一个组件，它将组件分为三个周期：</p>
+
+<ol>
+<li>实例化期： 在这里，我们可以分配组件的初始属性(props)和状态(state)，渲染组件的html，</li>
+<li>存在期：组件的生命价值将在这里体现，我们可以在这里响应组件的属性和状态的改变，从而调整组件的html结构或进行一些其他操作诸如数据交流、传递。</li>
+<li>销毁期：当组件完成使命后，我们便可以在这里解绑事件、释放资源</li>
+</ol>
+
+<p>在每个周期，React将依次调用以下函数：
+<img src="https://img.alicdn.com/tps/TB1XcY5IVXXXXa8XXXXXXXXXXXX-952-622.png" alt="周期函数"></p>
+
+<p>在组件存在期，每次属性/状态的改变，React都会调用render函数来计算组件的html结构，如果有变更，React便将变更同步到浏览器DOM中，尽管React很快，但是并非所有的属性/状态改变都会影响到组件的DOM，尤其是render函数比较复杂的组件，频繁的调用render将可能导致组件产生延迟。优秀的开发者不会放弃任何一丝提升系统性能的机会，我们可以在<code>shouldComponentUpdate</code>这个函数中捕捉属性/状态的改变，通过返回true便可以阻止React再调用render函数。</p>
+
+<h2>
+<a id="复用代码" class="anchor" href="#%E5%A4%8D%E7%94%A8%E4%BB%A3%E7%A0%81" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>复用代码</h2>
+
+<p>不编写重复的代码块，尽可能的复用代码。在React中，我们可以利用<code>mixin</code>来复用我们的代码。举个例子：</p>
+
+<pre><code>    /* 系统中有一个评论组件，一个留言组件，它们都需要和谐用户的输入，我们需要一个方法来过滤输入，显然我们不能在每个组件中都实现一次这个方法，mixin的功效便体现出来啦 */
+
+    /* 实现了一个和谐用户输入的函数 */
+    var FilterInput = function(input){
+        /* 这里进行一些过滤工作 */
+        return outPut；
+    }
+
+    /* 评论组件 */
+    var CommentClass = new React.createClass({
+        mixins: [ FilterInput ]
+        render : function(){
+            /* 这里直接通过调用this.FilterInput来和谐用户的输入 */
+            var outPut = this.FilterInput(input);
+            ......
+        }
+        ...
+    });
+
+    /* 留言组件 */
+    var MessageClass = new React.createClass({
+        mixins: [ FilterInput ],
+        render : function(){
+            ...
+        }
+        ...
+    });
+
+</code></pre>
+
+<p>简单的说<code>mixin</code>就是混入组件类中的对象，它还有一些高级用法，比如我们可以混入React原生定义的一些生命周期方法，React并不会简单的覆盖，对于以component开头的生命周期方法，如componentDidMount，componentDidUpdate等，React会按照<code>mixin</code>数组中定义的顺序调用，并最终调用组件自带的方法。灵活的使用<code>mixin</code>可以让我们的组件专注于自生的业务逻辑，便于组件代码逻辑的梳理。</p>
+
+<h2>
+<a id="解析汉诺塔游戏的实现" class="anchor" href="#%E8%A7%A3%E6%9E%90%E6%B1%89%E8%AF%BA%E5%A1%94%E6%B8%B8%E6%88%8F%E7%9A%84%E5%AE%9E%E7%8E%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>解析汉诺塔游戏的实现</h2>
+
+<p>汉诺塔（又称河内塔）问题是源于印度一个古老传说的益智玩具。大梵天创造世界的时候做了三根金刚石柱子，在一根柱子上从下往上按照大小顺序摞着64片黄金圆盘。大梵天命令婆罗门把圆盘从下面开始按大小顺序重新摆放在另一根柱子上。并且规定，在小圆盘上不能放大圆盘，在三根柱子之间一次只能移动一个圆盘——来自百科</p>
+
+<h3>
+<a id="模型建立" class="anchor" href="#%E6%A8%A1%E5%9E%8B%E5%BB%BA%E7%AB%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>模型建立</h3>
+
+<h4>
+<a id="规则模型" class="anchor" href="#%E8%A7%84%E5%88%99%E6%A8%A1%E5%9E%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>规则模型：</h4>
+
+<p>我们可以将圆盘编号，盘子越大，编号越大，将每根柱子上的的圆盘集合看成一个<code>栈</code>，栈顶只能压入编号比上一个盘子编号小的盘子(如果该柱没有盘子则可以直接压入)。在JS的实现中，我们可以用<code>Array</code>来实现这个<code>栈</code>，每当有盘子试图移向某柱子时，比较该柱栈顶的盘子编号与将要移入的盘子编号，如果符合移入条件则调用<code>pop()</code>从盘子来自的柱子的栈弹出该盘子编号,再调用<code>push()</code>将该盘子的编号压入将要移向的柱子的栈。</p>
+
+<h4>
+<a id="计分模型" class="anchor" href="#%E8%AE%A1%E5%88%86%E6%A8%A1%E5%9E%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>计分模型：</h4>
+
+<p>为了提升游戏的竞争性，我们需要从游戏的难度和耗费的时间来计算玩家的分数。即将分数拆分成基础分和时间分</p>
+
+<ul>
+<li>基础分： n个盘子要完成移动的最小次数为：h(n) = 2 ^ n - 1，次数越多表明游戏难度越大，为了拉开各个难度的分差，我们将h(n) * 10得到了游戏的基础分</li>
+<li>时间分：耗费的时间越短，分数越高，要实现这个计分模型，我们需要一个单调递减的函数，为了减少计算的复杂度，我们可以使用一次函数描述这个模型。确定一个函数需要两个点，
+
+<ul>
+<li>点1：假定每次移动需要耗费约1.5秒，则最佳完成游戏的时间为1.5 * h(n),我们将这个点完成游戏的分数定为100 * 1.5 * h(n) (很多时候，不同玩家完成的时间差距可能较短，为了拉大分差，于是将系数从10提到了100)</li>
+<li>点2：假定4倍的最佳时间过去了，玩家还没完成，则时间分数为0</li>
+</ul>
+</li>
+</ul>
+
+<p>最后，将基础分加上时间分便形成了游戏的计分模型。</p>
+
+<h3>
+<a id="react干了什么" class="anchor" href="#react%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>React干了什么</h3>
+
+<p>在这个游戏中，我们可以使用两个React类来实现这个游戏，下面我简单描述每个类的功能和主要函数，详细代码请见：<a href="https://code.csdn.net/leohuangyi/react_hannuota">React_HanNuoTa</a></p>
+
+<h4>
+<a id="tower类" class="anchor" href="#tower%E7%B1%BB" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tower类</h4>
+
+<ul>
+<li>
+<p>一个柱子对应一个这个类的实例，该类的主要功能：</p>
+
+<ul>
+<li>通过数组<code>this.state.disks</code>来存储该柱子拥有的盘子</li>
+<li>渲染数组中的盘子到浏览器DOM中</li>
+<li>赋予柱子顶部盘子可拖动的能力、柱子接受盘子可放的能力</li>
+</ul>
+</li>
+<li>
+<p>主要生命周期函数：</p>
+
+<ul>
+<li>
+<code>render</code>：通过遍历该盘子数组，将每个盘子渲染成大小不一的盒子放在柱子上。</li>
+<li>
+<code>componentDidMount/componentDidUpdate</code>：当盘子对应的DOM插入到浏览器后，我们在这里赋予柱子顶部盘子可拖动的能力<code>$(disk).draggable()</code>，赋予柱子接受其他盘子盘子的能力<code>$(tower).droppable()</code>
+</li>
+</ul>
+</li>
+</ul>
+
+<h4>
+<a id="towerbox" class="anchor" href="#towerbox" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TowerBox</h4>
+
+<ul>
+<li>
+<p>该类的功能是：</p>
+
+<ul>
+<li>提供存放柱子的容器</li>
+<li>统计游戏的进行时间，实现游戏计分</li>
+<li>判定盘子的移动是否可行，控制游戏规则的有效执行</li>
+<li>判断是否达成游戏目标，达成则给出相应的计分和提示</li>
+</ul>
+</li>
+<li>
+<p>主要函数：</p>
+
+<ul>
+<li>
+<code>checkIfDone</code>： 判定游戏是否达标，即第三个柱子上的盘子数是否等于所有的盘子数，若达标，则根据游戏的难度和玩家耗费的时间进行计分</li>
+<li>
+<code>handleDrop</code> ： 当用户拖动事件结束后，会触发放事件，继而会调用该函数，在这里我们可以判定这次拖动是否有效，即大盘子不能放到小盘子上，若有效我们则进行盘子的出栈、压栈操作，接着再调用<code>checkIfDone</code>来判定游戏是否完成</li>
+</ul>
+</li>
+</ul>
+
+<h2>
+<a id="最后" class="anchor" href="#%E6%9C%80%E5%90%8E" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>最后</h2>
+
+<p>当理解了React的生命周期式设计之后，我们可以很快很容易的搭建出这么一个还算复杂的游戏，真正耗费精力的不是在游戏逻辑的实现上，而是在处理游戏界面上，我们需要构建一个在移动端桌面端都兼容的游戏，必须根据设备的类型精确的控制每一个像素点，尤其是每个盘子的宽度、高度、位置更需要仔细把控，太小了用户点不到，太大了会难看，盘子数量改变了我们也需要做相应的调整。不过只要胆大心细，通过React这些设计优良的库来构建这么一个游戏还是很简单的。</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
