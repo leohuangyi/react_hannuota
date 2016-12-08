@@ -79,7 +79,7 @@ React主要通过生命周期函数来控制一个组件，它将组件分为三
 
 ### React干了什么
 
-在这个游戏中，我们可以使用两个React类来实现这个游戏，下面我简单描述每个类的功能和主要函数，详细代码请见：[React_HanNuoTa](https://code.csdn.net/leohuangyi/react_hannuota)
+在这个游戏中，我们可以使用两个React类来实现这个游戏，下面我简单描述每个类的功能和主要函数
 
 #### Tower类
 
